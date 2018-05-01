@@ -1,0 +1,29 @@
+{
+  "name": "notifyzz",
+  "description": "Plugin for notifications",
+  "main": "",
+  "authors": [
+    "BrooonS"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "notify",
+    "notifications",
+    "notifyzz",
+    "toast",
+    "toasts",
+    "notifys",
+    "swipe"
+  ],
+  "homepage": "https://github.com/BrooonS/NotifyzZ",
+  "ignore": [
+    "node_modules",
+    "src",
+    "test.html",
+    ".gitignore",
+    "package.json",
+    "gulpfile.js",
+    ".eslintrc",
+    ".babelrc"
+  ]
+}

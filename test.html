@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="dist/notifyzz.min.css">
+  <title>Document</title>
+  <style>
+    body {
+      font: 500 16px/1.75 sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <button onclick="addNotify();">Add notify</button>
+  
+  <script src="dist/notifyzz.min.js"></script>
+  <script>
+    function addNotify() {
+      new NotifyzZ({
+        title: '<i>BrooonS<i>',
+        content: 'Hello world!',
+      });
+    }
+
+    addNotify();
+  </script>
+</body>
+</html>
