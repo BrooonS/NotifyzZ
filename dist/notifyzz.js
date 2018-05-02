@@ -13,337 +13,342 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * Released under the MIT license: http://opensource.org/licenses/MIT
  */
 
-var NotifyzZ = function () {
-  // eslint-disable-line no-unused-vars
-  function NotifyzZ() {
-    var userOptions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+(function () {
+  var NotifyzZ = function () {
+    function NotifyzZ() {
+      var userSettings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-    _classCallCheck(this, NotifyzZ);
+      _classCallCheck(this, NotifyzZ);
 
-    this.isNotifyRemoved = false;
-    this.settings = _extends({
-      title: '',
-      content: '',
-      duration: 5000,
-      extraClass: '',
-      isCloseOnClick: true,
-      isCloseOnSwipe: true,
-      position: '',
-      onCreate: function onCreate() {},
-      onOpen: function onOpen() {},
-      onClose: function onClose() {},
-      onDestroy: function onDestroy() {},
-      onContainerDestroy: function onContainerDestroy() {}
-    }, userOptions);
+      this.isNotifyRemoved = false;
+      this.settings = _extends({
+        title: '',
+        content: '',
+        duration: 5000,
+        extraClass: '',
+        position: '',
+        isClosingOnClick: true,
+        isClosingOnSwipe: true,
+        beforeCreate: function beforeCreate() {},
+        beforeOpen: function beforeOpen() {},
+        beforeClose: function beforeClose() {},
+        beforeDestroy: function beforeDestroy() {},
+        beforeContainerDestroy: function beforeContainerDestroy() {}
+      }, userSettings);
 
-    this.setNotify();
-  }
-
-  _createClass(NotifyzZ, [{
-    key: 'setNotify',
-    value: function setNotify() {
-      var _settings = this.settings,
-          title = _settings.title,
-          content = _settings.content;
-
-      var isContainerExist = document.querySelector('.notifyzz-container') !== null;
-
-      if (title === '' && content === '') {
-        throw new Error('Title or content in notify not found.');
-      }
-
-      if (!isContainerExist) {
-        this.createContainer();
-      }
-
-      this.createNotify();
+      this.setNotify();
     }
-  }, {
-    key: 'createNotify',
-    value: function createNotify() {
-      var _settings2 = this.settings,
-          title = _settings2.title,
-          content = _settings2.content,
-          extraClass = _settings2.extraClass,
-          onCreate = _settings2.onCreate;
+
+    _createClass(NotifyzZ, [{
+      key: 'setNotify',
+      value: function setNotify() {
+        var _settings = this.settings,
+            title = _settings.title,
+            content = _settings.content;
+
+        var doesContainerExist = document.querySelector('.notifyzz-container') !== null;
+
+        if (title === '' && content === '') {
+          throw new Error('Title or content in Notify is not found.');
+        }
+
+        if (!doesContainerExist) {
+          this.createContainer();
+        }
+
+        this.createNotify();
+      }
+    }, {
+      key: 'createNotify',
+      value: function createNotify() {
+        var _settings2 = this.settings,
+            title = _settings2.title,
+            content = _settings2.content,
+            extraClass = _settings2.extraClass,
+            beforeCreate = _settings2.beforeCreate;
 
 
-      var container = document.querySelector('.notifyzz-container');
+        var container = document.querySelector('.notifyzz-container');
+
+        /**
+         * Create elements.
+         */
+        var notify = document.createElement('div');
+        var notifyTitle = document.createElement('div');
+        var notifyContent = document.createElement('div');
+
+        /**
+         * User callback on create notify.
+         */
+        if (typeof beforeCreate === 'function') {
+          beforeCreate();
+        }
+
+        notify.classList.add('notifyzz');
+
+        if (extraClass !== '') {
+          notify.classList.add(extraClass);
+        }
+
+        if (title !== '') {
+          notifyTitle.classList.add('notifyzz__title');
+          notifyTitle.innerHTML = title;
+          notify.appendChild(notifyTitle);
+        }
+
+        if (content !== '') {
+          notifyContent.classList.add('notifyzz__content');
+          notifyContent.innerHTML = content;
+          notify.appendChild(notifyContent);
+        }
+
+        /**
+         * Set notify to class variables.
+         */
+        this.notify = notify;
+
+        container.appendChild(notify);
+
+        this.setFunctions();
+      }
+    }, {
+      key: 'setFunctions',
+      value: function setFunctions() {
+        var _this = this;
+
+        var notify = this.notify;
+        var _settings3 = this.settings,
+            duration = _settings3.duration,
+            isClosingOnClick = _settings3.isClosingOnClick,
+            isClosingOnSwipe = _settings3.isClosingOnSwipe,
+            beforeOpen = _settings3.beforeOpen;
+
+
+        var showAnimationHandler = function showAnimationHandler(event) {
+          if (event.animationName === 'openAnimation') {
+            notify.classList.remove('notifyzz--open-animation');
+            notify.classList.add('notifyzz--open');
+
+            /**
+             * User callback on open notify.
+             */
+            if (typeof beforeOpen === 'function') {
+              beforeOpen();
+            }
+
+            notify.removeEventListener('animationend', showAnimationHandler);
+          }
+        };
+
+        /**
+         * For user callback on open notify.
+         */
+        notify.addEventListener('animationend', showAnimationHandler, false);
+
+        /**
+         * Bind close event after open notify.
+         */
+        if (isClosingOnClick) {
+          notify.addEventListener('click', function () {
+            _this.removeNotify();
+          });
+        }
+
+        /**
+         * Touch events.
+         */
+        if (isClosingOnSwipe) {
+          this.touchEvents();
+        }
+
+        /**
+         * Show notify.
+         */
+        notify.classList.add('notifyzz--open-animation');
+
+        if (duration !== 0) {
+          this.setTimeout();
+        }
+      }
 
       /**
-       * Create elements.
+       * Create timeout to destroy.
        */
-      var notify = document.createElement('div');
-      var notifyTitle = document.createElement('div');
-      var notifyContent = document.createElement('div');
 
-      notify.classList.add('notifyzz');
+    }, {
+      key: 'setTimeout',
+      value: function setTimeout() {
+        var _this2 = this;
 
-      if (extraClass !== '') {
-        notify.classList.add(extraClass);
-      }
+        var notify = this.notify;
+        var _settings4 = this.settings,
+            duration = _settings4.duration,
+            beforeClose = _settings4.beforeClose;
 
-      if (title !== '') {
-        notifyTitle.classList.add('notifyzz__title');
-        notifyTitle.innerHTML = title;
-        notify.appendChild(notifyTitle);
-      }
-
-      if (content !== '') {
-        notifyContent.classList.add('notifyzz__content');
-        notifyContent.innerHTML = content;
-        notify.appendChild(notifyContent);
-      }
-
-      /**
-       * User callback on create notify.
-       */
-      if (typeof onCreate === 'function') {
-        onCreate();
-      }
-
-      /**
-       * Set notify to class variables.
-       */
-      this.notify = notify;
-
-      container.appendChild(notify);
-
-      this.setFunctions();
-    }
-  }, {
-    key: 'setFunctions',
-    value: function setFunctions() {
-      var _this = this;
-
-      var notify = this.notify;
-      var _settings3 = this.settings,
-          duration = _settings3.duration,
-          isCloseOnClick = _settings3.isCloseOnClick,
-          isCloseOnSwipe = _settings3.isCloseOnSwipe,
-          onOpen = _settings3.onOpen;
-
-
-      var showAnimationHandler = function showAnimationHandler(event) {
-        if (event.animationName === 'openAnimation') {
-          notify.classList.remove('notifyzz--open-animation');
-          notify.classList.add('notifyzz--open');
-
+        var timeoutToClose = new this.Timer(function () {
           /**
-           * User callback on open notify.
+           * User callback on close notify.
            */
-          if (typeof onOpen === 'function') {
-            onOpen();
+          if (typeof beforeClose === 'function') {
+            beforeClose();
           }
 
-          notify.removeEventListener('animationend', showAnimationHandler);
-        }
-      };
+          _this2.removeNotify();
+        }, duration);
 
-      /**
-       * For user callback on open notify.
-       */
-      notify.addEventListener('animationend', showAnimationHandler, false);
+        var stopTimer = function stopTimer() {
+          return timeoutToClose.pause();
+        };
+        var startTimer = function startTimer() {
+          return timeoutToClose.resume();
+        };
 
-      /**
-       * Bind close event after open notify.
-       */
-      if (isCloseOnClick) {
-        notify.addEventListener('click', function () {
-          _this.removeNotify();
+        notify.addEventListener('touchstart', stopTimer);
+        notify.addEventListener('mousedown', stopTimer);
+
+        notify.addEventListener('touchend', startTimer);
+        notify.addEventListener('mouseout', startTimer);
+      }
+    }, {
+      key: 'touchEvents',
+      value: function touchEvents() {
+        var _this3 = this;
+
+        var notify = this.notify;
+
+        var startingPosition = null;
+        var isCloseAfterSwipe = false;
+
+        notify.addEventListener('touchstart', function (event) {
+          startingPosition = event.targetTouches[0].clientX;
+        });
+
+        notify.addEventListener('touchmove', function (event) {
+          var distance = startingPosition - event.targetTouches[0].clientX;
+
+          isCloseAfterSwipe = Math.abs(distance) > notify.offsetWidth / 2;
+
+          notify.style.right = distance + 'px';
+          notify.style.transition = 'none';
+          notify.style.opacity = (1 - Math.abs(distance * -1 / (notify.offsetWidth * 0.8))).toFixed(2);
+        });
+
+        notify.addEventListener('touchend', function (event) {
+          notify.style.transition = null;
+
+          if (isCloseAfterSwipe) {
+            _this3.removeNotify();
+          } else {
+            notify.style.opacity = null;
+            notify.style.right = 0;
+          }
         });
       }
+    }, {
+      key: 'removeNotify',
+      value: function removeNotify() {
+        var _this4 = this;
 
-      /**
-       * Touch events.
-       */
-      if (isCloseOnSwipe) {
-        this.touchEvents();
+        var notify = this.notify;
+        var beforeDestroy = this.settings.beforeDestroy;
+
+        var container = document.querySelector('.notifyzz-container');
+
+        if (!this.isNotifyRemoved) {
+          /**
+           * Slide notify.
+           */
+          notify.style.bottom = notify.offsetHeight + 'px';
+          notify.style.marginTop = '-' + notify.offsetHeight + 'px';
+
+          /**
+           * Close animation.
+           */
+          notify.classList.remove('notifyzz--open');
+          notify.classList.add('notifyzz--close-animation');
+
+          notify.addEventListener('animationend', function () {
+            /**
+             * User callback on destroy notify.
+             */
+            if (typeof beforeDestroy === 'function') {
+              beforeDestroy();
+            }
+
+            /**
+             * Remove notification.
+             */
+            notify.remove();
+
+            /**
+             * If notifications does not exist.
+             */
+            if (container.querySelector('.notifyzz') === null) {
+              _this4.removeContainer();
+            }
+          }, false);
+
+          this.isNotifyRemoved = true;
+        }
       }
+    }, {
+      key: 'createContainer',
+      value: function createContainer() {
+        var position = this.settings.position;
 
-      /**
-       * Show notify.
-       */
-      notify.classList.add('notifyzz--open-animation');
+        var container = document.createElement('div');
+        var positionArray = position.split(' ');
 
-      if (duration !== 0) {
-        this.setTimeout();
+        container.classList.add('notifyzz-container');
+
+        positionArray.forEach(function (className) {
+          container.classList.add('notifyzz-container--' + className);
+        });
+
+        document.body.appendChild(container);
       }
-    }
+    }, {
+      key: 'removeContainer',
+      value: function removeContainer() {
+        var beforeContainerDestroy = this.settings.beforeContainerDestroy;
 
-    /**
-     * Create timeout to destroy.
-     */
-
-  }, {
-    key: 'setTimeout',
-    value: function setTimeout() {
-      var _this2 = this;
-
-      var notify = this.notify;
-      var _settings4 = this.settings,
-          duration = _settings4.duration,
-          onClose = _settings4.onClose;
-
-      var timeoutToClose = new this.Timer(function () {
         /**
-         * User callback on close notify.
+         * User callback on destroy notify container.
          */
-        if (typeof onClose === 'function') {
-          onClose();
+
+        if (typeof beforeContainerDestroy === 'function') {
+          beforeContainerDestroy();
         }
 
-        _this2.removeNotify();
-      }, duration);
-
-      var stopTimer = function stopTimer() {
-        return timeoutToClose.pause();
-      };
-      var startTimer = function startTimer() {
-        return timeoutToClose.resume();
-      };
-
-      notify.addEventListener('touchstart', stopTimer);
-      notify.addEventListener('mousedown', stopTimer);
-
-      notify.addEventListener('touchend', startTimer);
-      notify.addEventListener('mouseout', startTimer);
-    }
-  }, {
-    key: 'touchEvents',
-    value: function touchEvents() {
-      var _this3 = this;
-
-      var notify = this.notify;
-
-      var startingPosition = null;
-      var isCloseAfterSwipe = false;
-
-      notify.addEventListener('touchstart', function (event) {
-        startingPosition = event.targetTouches[0].clientX;
-      });
-
-      notify.addEventListener('touchmove', function (event) {
-        var distance = startingPosition - event.targetTouches[0].clientX;
-
-        isCloseAfterSwipe = Math.abs(distance) > notify.offsetWidth / 2;
-
-        notify.style.right = distance + 'px';
-        notify.style.transition = 'none';
-        notify.style.opacity = (1 - Math.abs(distance * -1 / (notify.offsetWidth * 0.8))).toFixed(2);
-      });
-
-      notify.addEventListener('touchend', function (event) {
-        notify.style.transition = null;
-
-        if (isCloseAfterSwipe) {
-          _this3.removeNotify();
-        } else {
-          notify.style.opacity = null;
-          notify.style.right = 0;
-        }
-      });
-    }
-  }, {
-    key: 'removeNotify',
-    value: function removeNotify() {
-      var _this4 = this;
-
-      var notify = this.notify;
-      var onDestroy = this.settings.onDestroy;
-
-      var container = document.querySelector('.notifyzz-container');
-
-      if (!this.isNotifyRemoved) {
-        /**
-         * Slide notify.
-         */
-        notify.style.bottom = notify.offsetHeight + 'px';
-        notify.style['margin-top'] = '-' + notify.offsetHeight + 'px';
-
-        /**
-         * Close animation.
-         */
-        notify.classList.remove('notifyzz--open');
-        notify.classList.add('notifyzz--close-animation');
-
-        notify.addEventListener('animationend', function () {
-          /**
-           * User callback on destroy notify.
-           */
-          if (typeof onDestroy === 'function') {
-            onDestroy();
-          }
-
-          /**
-           * Remove notification.
-           */
-          notify.remove();
-
-          /**
-           * If notifications is not exist.
-           */
-          if (container.querySelector('.notifyzz') === null) {
-            _this4.removeContainer();
-          }
-        }, false);
-
-        this.isNotifyRemoved = true;
+        document.querySelector('.notifyzz-container').remove();
       }
-    }
-  }, {
-    key: 'createContainer',
-    value: function createContainer() {
-      var position = this.settings.position;
+    }, {
+      key: 'Timer',
+      value: function Timer(callback, delay) {
+        var remaining = delay;
+        var timerId = null;
+        var start = '';
 
-      var container = document.createElement('div');
-      var positionArray = position.split(' ');
+        this.pause = function () {
+          window.clearTimeout(timerId);
+          remaining -= new Date() - start;
+        };
 
-      container.classList.add('notifyzz-container');
+        this.resume = function () {
+          start = new Date();
+          timerId = window.setTimeout(callback, remaining);
+        };
 
-      positionArray.forEach(function (className) {
-        container.classList.add('notifyzz-container--' + className);
-      });
-
-      document.body.appendChild(container);
-    }
-  }, {
-    key: 'removeContainer',
-    value: function removeContainer() {
-      var onContainerDestroy = this.settings.onContainerDestroy;
-
-
-      document.querySelector('.notifyzz-container').remove();
-
-      /**
-       * User callback on destroy notify container.
-       */
-      if (typeof onContainerDestroy === 'function') {
-        onContainerDestroy();
+        this.resume();
       }
-    }
-  }, {
-    key: 'Timer',
-    value: function Timer(callback, delay) {
-      var remaining = delay;
-      var timerId = null;
-      var start = '';
+    }]);
 
-      this.pause = function () {
-        window.clearTimeout(timerId);
-        remaining -= new Date() - start;
-      };
+    return NotifyzZ;
+  }();
 
-      this.resume = function () {
-        start = new Date();
-
-        window.clearTimeout(timerId);
-        timerId = window.setTimeout(callback, remaining);
-      };
-
-      this.resume();
-    }
-  }]);
-
-  return NotifyzZ;
-}();
+  if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+    module.exports = NotifyzZ;
+  } else {
+    window.NotifyzZ = NotifyzZ;
+  }
+})();
