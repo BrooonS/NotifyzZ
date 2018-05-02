@@ -7,7 +7,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /*!
- * NotifyzZ v1.0.0: Plugin for notifications
+ * NotifyzZ v1.0.1: Plugin for notifications
  *
  * Contribute: https://github.com/BrooonS/NotifyzZ
  * Released under the MIT license: http://opensource.org/licenses/MIT

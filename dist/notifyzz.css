@@ -1,5 +1,5 @@
 /*!
- * NotifyzZ v1.0.0: Plugin for notifications
+ * NotifyzZ v1.0.1: Plugin for notifications
  *
  * Contribute: https://github.com/BrooonS/NotifyzZ
  * Released under the MIT license: http://opensource.org/licenses/MIT
