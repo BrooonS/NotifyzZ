@@ -10,6 +10,12 @@
   top: 15px;
   right: 15px;
   pointer-events: none; }
+  .notifyzz-container--left {
+    right: auto;
+    left: 15px; }
+  .notifyzz-container--bottom {
+    top: auto;
+    bottom: 15px; }
   @media all and (max-width: 500px) {
     .notifyzz-container {
       top: auto;
@@ -33,9 +39,6 @@
   transition: margin-top .5s ease, bottom .5s ease, right .15s ease;
   pointer-events: auto;
   cursor: pointer; }
-  @media all and (max-width: 500px) {
-    .notifyzz {
-      width: 100%; } }
   .notifyzz:not(:first-child) {
     margin-top: 10px; }
   .notifyzz--open-animation {
@@ -51,6 +54,9 @@
     -webkit-transform: translateY(0) translateZ(0);
        -moz-transform: translateY(0) translateZ(0);
             transform: translateY(0) translateZ(0); }
+  @media all and (max-width: 500px) {
+    .notifyzz {
+      width: 100%; } }
   .notifyzz__title {
     font-size: 16px;
     color: #fff; }

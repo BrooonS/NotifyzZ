@@ -28,6 +28,7 @@ var NotifyzZ = function () {
       extraClass: '',
       isCloseOnClick: true,
       isCloseOnSwipe: true,
+      position: '',
       onCreate: function onCreate() {},
       onOpen: function onOpen() {},
       onClose: function onClose() {},
@@ -293,9 +294,17 @@ var NotifyzZ = function () {
   }, {
     key: 'createContainer',
     value: function createContainer() {
+      var position = this.settings.position;
+
       var container = document.createElement('div');
+      var positionArray = position.split(' ');
 
       container.classList.add('notifyzz-container');
+
+      positionArray.forEach(function (className) {
+        container.classList.add('notifyzz-container--' + className);
+      });
+
       document.body.appendChild(container);
     }
   }, {

@@ -15,6 +15,7 @@ class NotifyzZ { // eslint-disable-line no-unused-vars
       extraClass: '',
       isCloseOnClick: true,
       isCloseOnSwipe: true,
+      position: '',
       onCreate() {},
       onOpen() {},
       onClose() {},
@@ -251,9 +252,16 @@ class NotifyzZ { // eslint-disable-line no-unused-vars
   }
 
   createContainer() {
+    const { position } = this.settings;
     const container = document.createElement('div');
+    const positionArray = position.split(' ');
 
     container.classList.add('notifyzz-container');
+
+    positionArray.forEach((className) => {
+      container.classList.add(`notifyzz-container--${className}`);
+    });
+
     document.body.appendChild(container);
   }
 
