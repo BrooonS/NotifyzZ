@@ -39,13 +39,13 @@ const paths = {
  */
 gulp.task('sass', () => {
   return gulp.src(paths.src.sass)
-    .pipe(sass().on('error', notify.onError({
-      message: '<%= error.message %>',
-      title: 'Sass Error!',
-    })))
-    .pipe(autoprefixer({
-      browsers,
-    }))
+    .pipe(sass({ outputStyle: 'expanded' })
+      .on('error', notify.onError({
+        message: '<%= error.message %>',
+        title: 'Sass Error!',
+      }))
+    )
+    .pipe(autoprefixer({ browsers }))
     .pipe(gulp.dest(paths.dist))
     .pipe(minifyCSS())
     .pipe(rename({ suffix: '.min' }))
