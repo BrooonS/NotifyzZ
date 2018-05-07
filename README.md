@@ -58,8 +58,8 @@ new NotifyzZ({
 
 | Setting                | Description                          | Type       |
 | ---------------------- | ------------------------------------ | ---------- |
-| title                  | Title in notify (allow HTML)         | `string`   |
-| content                | Content in notify (allow HTML)       | `string`   |
+| title                  | Title in notify (HTML is allowed)    | `string`   |
+| content                | Content in notify (HTML is allowed)  | `string`   |
 | duration               | Duration of a notification           | `number`   |
 | extraClass             | Added to notify                      | `string`   |
 | position               | Notify position (allow left, bottom) | `string`   |

@@ -126,7 +126,7 @@
       notify.addEventListener('animationend', showAnimationHandler, false);
 
       /**
-       * Bind close event after open notify.
+       * Bind close event after opening notify.
        */
       if (isClosingOnClick) {
         notify.addEventListener('click', () => {
@@ -135,10 +135,10 @@
       }
 
       /**
-       * Touch events.
+       * Bind touch events.
        */
       if (isClosingOnSwipe) {
-        this.touchEvents();
+        this.bindTouchEvents();
       }
 
       /**
@@ -178,7 +178,7 @@
       notify.addEventListener('mouseout', startTimer);
     }
 
-    touchEvents() {
+    bindTouchEvents() {
       const { notify } = this;
       let startingPosition = null;
       let isCloseAfterSwipe = false;

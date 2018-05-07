@@ -146,7 +146,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         notify.addEventListener('animationend', showAnimationHandler, false);
 
         /**
-         * Bind close event after open notify.
+         * Bind close event after opening notify.
          */
         if (isClosingOnClick) {
           notify.addEventListener('click', function () {
@@ -155,10 +155,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
 
         /**
-         * Touch events.
+         * Bind touch events.
          */
         if (isClosingOnSwipe) {
-          this.touchEvents();
+          this.bindTouchEvents();
         }
 
         /**
@@ -210,8 +210,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         notify.addEventListener('mouseout', startTimer);
       }
     }, {
-      key: 'touchEvents',
-      value: function touchEvents() {
+      key: 'bindTouchEvents',
+      value: function bindTouchEvents() {
         var _this3 = this;
 
         var notify = this.notify;
